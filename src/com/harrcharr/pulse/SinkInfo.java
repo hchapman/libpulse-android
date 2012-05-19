@@ -41,10 +41,10 @@ public class SinkInfo extends StreamNode {
 	}
 	
 	public void setMute(boolean mute, SuccessCallback cb) {
-		
+		mPulse.setSinkMute(mIndex, mute, cb);
 	}
 	public void setVolume(Volume volume, SuccessCallback cb) {
-	
+		mPulse.setSinkVolume(mIndex, volume, cb);
 	}
 	
 	

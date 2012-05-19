@@ -118,6 +118,9 @@ public class PulseContext extends JNIObject {
 	}
 	private final native void JNISubscribeSink(SubscriptionCallback cb);
 	
+	public void setSinkVolume(int idx, Volume volume, SuccessCallback cb) {
+		setSinkVolume(idx, volume.getVolumes(), cb);
+	}
 	public void setSinkInputVolume(int idx, Volume volume, SuccessCallback cb) {
 		setSinkInputVolume(idx, volume.getVolumes(), cb);
 	}
@@ -172,7 +175,8 @@ public class PulseContext extends JNIObject {
 	// Sink
 	public final native void getSinkInfo(int idx, InfoCallback<SinkInfo> cb);
 	public final native void getSinkInfoList(InfoCallback<SinkInfo> cb);
-	public final native void setSinkMuteByIndex(int idx, boolean mute);
+	public final native void setSinkMute(int idx, boolean mute, SuccessCallback cb);
+	private synchronized final native void setSinkVolume(int idx, int[] volumes, SuccessCallback cb);
 	
 	// Sink Input
 	public final native void getSinkInputInfo(int idx, InfoCallback<SinkInput> cb);

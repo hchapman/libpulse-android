@@ -401,7 +401,7 @@ void info_cb(pa_context* c, const void *i,
 	jmethodID mid;
 	jenv_status_t status;
 
-	LOGD("In sink input info callback");
+	LOGD("In info callback");
 
 	if ((status = get_jnienv(&env)) == JENV_UNSUCCESSFUL) {
 		return;

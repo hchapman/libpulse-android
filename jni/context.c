@@ -115,6 +115,18 @@ Java_com_harrcharr_pulse_PulseContext_setSinkMute(
 			(int) mute, success_cb);
 }
 
+
+JNIEXPORT void JNICALL
+Java_com_harrcharr_pulse_PulseContext_setSinkVolume(
+		JNIEnv *jenv, jobject jcontext,
+		jint idx, jintArray volumes,
+		jobject runnable) {
+	context_synchronized_volume_call(
+			jenv, jcontext, runnable,
+			&pa_context_set_sink_volume_by_index, (uint32_t)idx,
+			volumes, success_cb);
+}
+
 JNIEXPORT void JNICALL
 Java_com_harrcharr_pulse_PulseContext_getSinkInputInfoList(
 		JNIEnv *jenv, jobject jcontext, jobject runnable) {
