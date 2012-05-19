@@ -1,3 +1,4 @@
-Reverb aims to be a fully functional remote control
-for remote Pulseaudio servers (hint: think pavucontrol, 
-on your phone!) using libpulse itself.
+Libpulse-android is a JNI interface to functions of libpulse (which communicates with pulseaudio).
+
+As of now, it is focused on providing access to introspection functions of the library, so as to
+enable writing of a remote control volume application (see my project Reverb on github)
