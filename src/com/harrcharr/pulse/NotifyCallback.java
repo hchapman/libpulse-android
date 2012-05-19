@@ -19,21 +19,8 @@
  * Contributors:
  *     Harrison Chapman - initial API and implementation
  ******************************************************************************/
-package com.harrcharr.reverb.pulse;
+package com.harrcharr.pulse;
 
-public abstract class InfoCallback<T extends PulseNode> extends JniCallback {
-	protected PulseContext mPulse;
-	public InfoCallback () {
-		super();
-	}
-	public InfoCallback (PulseContext c) {
-		this();
-		mPulse = c;
-	}
-	public void setContext(PulseContext c) {
-		mPulse = c;
-	}
-	
-	public abstract void run(long iPtr);
-	public abstract void run(final T node);
+public abstract class NotifyCallback extends JniCallback {
+	public abstract void run();
 }

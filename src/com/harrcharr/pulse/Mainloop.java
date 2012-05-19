@@ -19,30 +19,22 @@
  * Contributors:
  *     Harrison Chapman - initial API and implementation
  ******************************************************************************/
-package com.harrcharr.reverb.pulse;
+package com.harrcharr.pulse;
 
-public class ClientInfo extends PulseNode {
-	String sName;
-	
-	public ClientInfo(PulseContext pulse, long ptr) {
-		super(pulse, ptr);
+public class Mainloop extends JNIObject {
+	static {
+		System.loadLibrary("json");
+		System.loadLibrary("sndfile");
+		System.loadLibrary("pulsecommon-UNKNOWN.UNKNOWN");
+		System.loadLibrary("pulse");
+		System.loadLibrary("pulse_interface");
 	}
 	
-	public void update(long ptr) {
-		JNIPopulateStruct(ptr);
-	}
-	public String getName() {
-		return sName;
+	public Mainloop() {
+		super(Mainloop.JNINew());
+		Mainloop.JNIStart(getPointer());
 	}
 	
-	public String toString() {
-		return sName;
-	}
-	
-	private final native void JNIPopulateStruct(long pClientInfo);
-
-	@Override
-	public String getDescriptiveName() {
-		return sName;
-	}
+	private final static native long JNINew();	
+	private final static native long JNIStart(long pMainloop);
 }

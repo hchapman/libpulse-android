@@ -19,8 +19,13 @@
  * Contributors:
  *     Harrison Chapman - initial API and implementation
  ******************************************************************************/
-package com.harrcharr.reverb.pulse;
+package com.harrcharr.pulse;
 
-public abstract class NotifyCallback extends JniCallback {
-	public abstract void run();
+public abstract class JNIStruct {
+	protected JNIStruct(long ptr) {
+		if (ptr != 0) {
+			update(ptr);
+		}
+	}
+	public abstract void update(long ptr);
 }

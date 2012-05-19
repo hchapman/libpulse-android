@@ -19,38 +19,40 @@
  * Contributors:
  *     Harrison Chapman - initial API and implementation
  ******************************************************************************/
-package com.harrcharr.reverb.pulse;
+package com.harrcharr.pulse;
 
-import android.util.Log;
+public class SinkInfo extends StreamNode {
+	String sName;
+	String sDescription;
+	
+	public SinkInfo(PulseContext pulse, long ptr) {
+		super(pulse, ptr);
+	}
+	
+	public void update(long ptr) {
+		JNIPopulateStruct(ptr);
+	}
+	public String getDescription() {
+		return sDescription;
+	}
+	
+	public String toString() {
+		return sName + "\n" + sDescription;
+	}
+	
+	public void setMute(boolean mute, SuccessCallback cb) {
+		
+	}
+	public void setVolume(Volume volume, SuccessCallback cb) {
+	
+	}
+	
+	
+	private final native void JNIPopulateStruct(long pSinkInfo);
 
-public class Volume {
-	public static int NORM = 0x10000;
-	public static int MUTED = 0;
-	
-	char mChannels;
-	int[] mVolumes;
-	
-	public Volume(int[] vols) {
-		mVolumes = vols;
-		mChannels = (char)vols.length;
+	@Override
+	public String getDescriptiveName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
-	
-	public int[] getVolumes() {
-		return mVolumes;
-	}
-	public int getNumChannels() {
-		return mVolumes.length;
-	}
-	public int get() {
-		return mVolumes[0];
-	}
-	
-	public void changeVolume(int channel, int volume) {
-		mVolumes[channel] = volume;
-	}
-//	public Volume(char channels, int[] values) {
-//		// init it somehow maybe
-//	}
-	
-	public final native int getMax();
 }

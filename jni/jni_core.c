@@ -28,9 +28,9 @@ jclass jcls_context;
 jclass jcls_volume;
 
 const char *k_context_path =
-		"com/harrcharr/reverb/pulse/PulseContext";
+		"com/harrcharr/pulse/PulseContext";
 const char *k_volume_path =
-		"com/harrcharr/reverb/pulse/Volume";
+		"com/harrcharr/pulse/Volume";
 
 jenv_status_t get_jnienv(JNIEnv **env) {
 	dlog(0, "about to get jnienv");

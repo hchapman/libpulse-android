@@ -19,22 +19,21 @@
  * Contributors:
  *     Harrison Chapman - initial API and implementation
  ******************************************************************************/
-package com.harrcharr.reverb.pulse;
+package com.harrcharr.pulse;
 
-public abstract class StreamNode extends PulseNode {
-	protected boolean mMuted;
-	protected boolean mCorked;
-	
-	protected Volume mVolume;
-	
-	public StreamNode(PulseContext pulse, long iPtr) {
-		super(pulse, iPtr);
+public abstract class InfoCallback<T extends PulseNode> extends JniCallback {
+	protected PulseContext mPulse;
+	public InfoCallback () {
+		super();
+	}
+	public InfoCallback (PulseContext c) {
+		this();
+		mPulse = c;
+	}
+	public void setContext(PulseContext c) {
+		mPulse = c;
 	}
 	
-	public Volume getVolume() {
-		return mVolume;
-	}
-	
-	public abstract void setMute(boolean mute, SuccessCallback c);
-	public abstract void setVolume(Volume volume, SuccessCallback c);
+	public abstract void run(long iPtr);
+	public abstract void run(final T node);
 }

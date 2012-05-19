@@ -19,32 +19,38 @@
  * Contributors:
  *     Harrison Chapman - initial API and implementation
  ******************************************************************************/
-package com.harrcharr.reverb.pulse;
+package com.harrcharr.pulse;
 
-import java.nio.ByteBuffer;
+import android.util.Log;
 
-public abstract class PulseNode extends JNIStruct {
-	public static String PROP_APPLICATION_NAME = "application.name";
+public class Volume {
+	public static int NORM = 0x10000;
+	public static int MUTED = 0;
 	
-	protected PulseContext mPulse;
-
-	protected int mIndex;
-	protected int mOwnerModule;
+	char mChannels;
+	int[] mVolumes;
 	
-	protected String mName;
-	protected String mDriver;
-	
-	public PulseNode(PulseContext pulse, long iPtr) {
-		super(iPtr);
-		mPulse = pulse;
+	public Volume(int[] vols) {
+		mVolumes = vols;
+		mChannels = (char)vols.length;
 	}
 	
-	public int getIndex() {
-		return mIndex;
+	public int[] getVolumes() {
+		return mVolumes;
+	}
+	public int getNumChannels() {
+		return mVolumes.length;
+	}
+	public int get() {
+		return mVolumes[0];
 	}
 	
-	/*
-	 * Returns a human-readable name for this PulseNode.
-	 */
-	public abstract String getDescriptiveName();
+	public void changeVolume(int channel, int volume) {
+		mVolumes[channel] = volume;
+	}
+//	public Volume(char channels, int[] values) {
+//		// init it somehow maybe
+//	}
+	
+	public final native int getMax();
 }

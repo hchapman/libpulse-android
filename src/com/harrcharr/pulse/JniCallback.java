@@ -1,4 +1,4 @@
-package com.harrcharr.reverb.pulse;
+package com.harrcharr.pulse;
 
 public abstract class JniCallback implements Comparable<JniCallback> {
 	private PulseContext mPulse;

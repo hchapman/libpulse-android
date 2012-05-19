@@ -19,7 +19,7 @@
  * Contributors:
  *     Harrison Chapman - initial API and implementation
  ******************************************************************************/
-package com.harrcharr.reverb.pulse;
+package com.harrcharr.pulse;
 
 public class Pulse {
 	long ptr_mainloop;

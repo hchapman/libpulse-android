@@ -80,7 +80,7 @@ inline void set_field_volume(JNIEnv *jenv,
 		jobject jobj, jclass cls,
 		char *fname, pa_cvolume* v) {
 	jfieldID fid = (*jenv)->GetFieldID(jenv, cls, fname,
-			"Lcom/harrcharr/reverb/pulse/Volume;");
+			"Lcom/harrcharr/pulse/Volume;");
 	if (fid == NULL) {
 		LOGE("Unable to find field %s", fname);
 		return; // Field not found
@@ -118,7 +118,7 @@ inline void set_field_volume(JNIEnv *jenv,
 //}
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_SinkInfo_JNIPopulateStruct(
+Java_com_harrcharr_pulse_SinkInfo_JNIPopulateStruct(
 		JNIEnv *jenv, jobject jobj, jlong i_ptr) {
 	pa_sink_info *i = (pa_sink_info*)i_ptr;
 	jstring jstr;
@@ -130,10 +130,12 @@ Java_com_harrcharr_reverb_pulse_SinkInfo_JNIPopulateStruct(
 	jclass cls = (*jenv)->GetObjectClass(jenv, jobj);
 	set_field_string(jenv, jobj, cls, "sName", i->name);
 	set_field_string(jenv, jobj, cls, "sDescription", i->description);
+	set_field_int(jenv, jobj, cls, "mIndex", i->index);
+	set_field_volume(jenv, jobj, cls, "mVolume", &(i->volume));
 }
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_SinkInput_JNIPopulateStruct(
+Java_com_harrcharr_pulse_SinkInput_JNIPopulateStruct(
 		JNIEnv *jenv, jobject jobj, jlong i_ptr) {
 	pa_sink_input_info *i = (pa_sink_input_info*)i_ptr;
 	jstring jstr;
@@ -159,7 +161,7 @@ Java_com_harrcharr_reverb_pulse_SinkInput_JNIPopulateStruct(
 }
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_ClientInfo_JNIPopulateStruct(
+Java_com_harrcharr_pulse_ClientInfo_JNIPopulateStruct(
 		JNIEnv *jenv, jobject jobj, jlong i_ptr) {
 	pa_client_info *i = (pa_client_info*)i_ptr;
 	jstring jstr;
@@ -172,7 +174,7 @@ Java_com_harrcharr_reverb_pulse_ClientInfo_JNIPopulateStruct(
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_harrcharr_reverb_pulse_PulseNode_getProps(
+Java_com_harrcharr_pulse_PulseNode_getProps(
 		JNIEnv *jenv, jobject jobj, jstring key) {
 	pa_proplist *p = (pa_proplist *)get_long_field(jenv, jobj, "mProplist");
 
@@ -181,7 +183,7 @@ Java_com_harrcharr_reverb_pulse_PulseNode_getProps(
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_harrcharr_reverb_pulse_Mainloop_JNINew(
+Java_com_harrcharr_pulse_Mainloop_JNINew(
 		JNIEnv *jenv, jclass jcls) {
 	pa_threaded_mainloop *m = pa_threaded_mainloop_new();
 
@@ -189,7 +191,7 @@ Java_com_harrcharr_reverb_pulse_Mainloop_JNINew(
 }
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_Mainloop_JNIStart(
+Java_com_harrcharr_pulse_Mainloop_JNIStart(
 		JNIEnv *jenv, jclass jcls, jlong ptr_m) {
 	pa_threaded_mainloop_start((pa_threaded_mainloop*)ptr_m);
 }

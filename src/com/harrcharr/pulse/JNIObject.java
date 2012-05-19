@@ -19,41 +19,39 @@
  * Contributors:
  *     Harrison Chapman - initial API and implementation
  ******************************************************************************/
-package com.harrcharr.reverb.pulse;
+package com.harrcharr.pulse;
 
-public class SinkInfo extends StreamNode {
-	String sName;
-	String sDescription;
-	
-	public SinkInfo(PulseContext pulse, long ptr) {
-		super(pulse, ptr);
-	}
-	
-	public void update(long ptr) {
-		JNIUpdateWithInfo(ptr);
-	}
-	public String getDescription() {
-		return sDescription;
-	}
-	
-	public String toString() {
-		return sName + "\n" + sDescription;
-	}
-	
-	public void setMute(boolean mute, SuccessCallback cb) {
-		
-	}
-	public void setVolume(Volume volume, SuccessCallback cb) {
-	
-	}
-	
-	public native Volume getVolume();
-	
-	private final native void JNIUpdateWithInfo(long pSinkInfo);
+import java.util.HashMap;
 
-	@Override
-	public String getDescriptiveName() {
-		// TODO Auto-generated method stub
-		return null;
+public abstract class JNIObject {	
+	private long mPointer;
+	private static HashMap<Long, JNIObject> ptrTable = new HashMap<Long, JNIObject>();
+	
+	protected JNIObject(long ptr) {
+		mPointer = ptr;
+		addToTable();
+	}
+	protected void finalize() {
+		purge();
+	}
+	
+	/* 
+	 * Delete object being pointed to, remove self from pointer table
+	 */
+	public synchronized void purge() {
+		ptrTable.remove(new Long(mPointer));
+	}
+	
+	public static JNIObject getByPointer(long ptr) {
+		return getByPointer(new Long(ptr));
+	}
+	public static JNIObject getByPointer(Long ptr) {
+		return ptrTable.get(ptr);
+	}
+	protected void addToTable() {
+		ptrTable.put(new Long(mPointer), this);
+	}
+	public long getPointer() {
+		return mPointer;
 	}
 }

@@ -23,7 +23,7 @@
 #import "jni_core.h"
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_JNIUtil_deleteGlobalRef(
+Java_com_harrcharr_pulse_JNIUtil_deleteGlobalRef(
 		JNIEnv *jenv, jclass jcls, jlong gref) {
 	(*jenv)->DeleteGlobalRef(jenv, (jobject)gref);
 }

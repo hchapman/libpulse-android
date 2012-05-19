@@ -19,7 +19,7 @@
  * Contributors:
  *     Harrison Chapman - initial API and implementation
  ******************************************************************************/
-package com.harrcharr.reverb.pulse;
+package com.harrcharr.pulse;
 
 import java.nio.ByteBuffer;
 import java.util.Set;
@@ -101,17 +101,22 @@ public class PulseContext extends JNIObject {
 		if (mSubscribed)
 			return;
 		
-		mSubsCbsPointer = JNISubscribe(getPointer(), mainloop.getPointer());
+		mSubsCbsPointer = JNISubscribe();
 		mSubscribed = true;
 	}
-	private static final native long JNISubscribe(long pContext, long pMainloop);
+	private final native long JNISubscribe();
 	
 	public void subscribeSinkInput(SubscriptionCallback cb) {
 		subscribe();
 		JNISubscribeSinkInput(cb);
 	}
 	private final native void JNISubscribeSinkInput(SubscriptionCallback cb);
-	
+
+	public void subscribeSink(SubscriptionCallback cb) {
+		subscribe();
+		JNISubscribeSink(cb);
+	}
+	private final native void JNISubscribeSink(SubscriptionCallback cb);
 	
 	public void setSinkInputVolume(int idx, Volume volume, SuccessCallback cb) {
 		setSinkInputVolume(idx, volume.getVolumes(), cb);
@@ -165,7 +170,8 @@ public class PulseContext extends JNIObject {
 	public final native int getStatus();
 
 	// Sink
-	public final native void getSinkInfoByIndex(int idx, InfoCallback<SinkInfo> cb);
+	public final native void getSinkInfo(int idx, InfoCallback<SinkInfo> cb);
+	public final native void getSinkInfoList(InfoCallback<SinkInfo> cb);
 	public final native void setSinkMuteByIndex(int idx, boolean mute);
 	
 	// Sink Input

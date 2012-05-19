@@ -123,7 +123,7 @@ void set_state_cbs_ptr(JNIEnv *jenv, jobject jcontext, jni_pa_state_cbs_t *cbs) 
 void set_cb_context(JNIEnv *jenv, jobject jcb, jobject jcontext) {
 	jclass jcls = (*jenv)->GetObjectClass(jenv, jcb);
 	jmethodID mid = (*jenv)->GetMethodID(jenv, jcls,
-			"setContext", "(Lcom/harrcharr/reverb/pulse/PulseContext;)V");
+			"setContext", "(Lcom/harrcharr/pulse/PulseContext;)V");
 	if (mid == NULL) {
 		LOGE("There was an error getting the context set method ID");
 		return;
@@ -249,7 +249,7 @@ jobject get_cb_globalref(JNIEnv *jenv, jobject c, jobject ref) {
 	LOGD("About to get method id to store our ptr");
 	jclass cls = (*jenv)->GetObjectClass(jenv, ref);
 	LOGD("About to get method id to store our ptr 2");
-	jfieldID mid = (*jenv)->GetMethodID(jenv, cls, "storeGlobal", "(Lcom/harrcharr/reverb/pulse/PulseContext;J)V");
+	jfieldID mid = (*jenv)->GetMethodID(jenv, cls, "storeGlobal", "(Lcom/harrcharr/pulse/PulseContext;J)V");
 
 	if (mid == NULL)
 		return; // We're in trouble
@@ -261,6 +261,9 @@ jobject get_cb_globalref(JNIEnv *jenv, jobject c, jobject ref) {
 }
 
 void del_cb_globalref(JNIEnv *jenv, jobject gref) {
+	if (gref == NULL)
+		return;
+
 	jclass cls = (*jenv)->GetObjectClass(jenv, gref);
 	jfieldID mid = (*jenv)->GetMethodID(jenv, cls, "unstoreGlobal", "()V");
 
@@ -299,22 +302,17 @@ void context_subscription_cb(pa_context* c, pa_subscription_event_type_t t,
 
     switch (t & PA_SUBSCRIPTION_EVENT_FACILITY_MASK) {
         case PA_SUBSCRIPTION_EVENT_SINK:
-//            if ((t & PA_SUBSCRIPTION_EVENT_TYPE_MASK) == PA_SUBSCRIPTION_EVENT_REMOVE)
-//                w->removeSink(index);
-//            else {
-//                pa_operation *o;
-//                if (!(o = pa_context_get_sink_info_by_index(c, index, sink_cb, w))) {
-//                    show_error(_("pa_context_get_sink_info_by_index() failed"));
-//                    return;
-//                }
-//                pa_operation_unref(o);
-//            }
+        	LOGD("Sink event");
+        	if (cbs->sink_cbo != NULL)
+        		call_subscription_run(t & PA_SUBSCRIPTION_EVENT_TYPE_MASK,
+        				idx, cbs->sink_cbo);
             break;
 
         case PA_SUBSCRIPTION_EVENT_SOURCE:
         	break;
 
         case PA_SUBSCRIPTION_EVENT_SINK_INPUT:
+        	LOGD("Sink input event");
         	if (cbs->sink_input_cbo != NULL)
         		call_subscription_run(t & PA_SUBSCRIPTION_EVENT_TYPE_MASK,
         				idx, cbs->sink_input_cbo);
@@ -415,7 +413,8 @@ void info_cb(pa_context* c, const void *i,
     assert(m);
 
 	if (eol < 0) {
-		LOGE("Error returned from a sink info query");
+		LOGE("Error returned from an info query");
+		LOGI("Data returned is at %d", i);
 	    pa_threaded_mainloop_signal(m, 0);
 	    del_cb_globalref(env, cbdata->cb_runnable);
 	    free(cbdata);

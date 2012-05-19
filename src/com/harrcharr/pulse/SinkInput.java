@@ -19,39 +19,51 @@
  * Contributors:
  *     Harrison Chapman - initial API and implementation
  ******************************************************************************/
-package com.harrcharr.reverb.pulse;
+package com.harrcharr.pulse;
 
-import java.util.HashMap;
+import android.util.Log;
 
-public abstract class JNIObject {	
-	private long mPointer;
-	private static HashMap<Long, JNIObject> ptrTable = new HashMap<Long, JNIObject>();
+public class SinkInput extends StreamNode {		
+	// More optional parameters
+	protected String mAppName;
 	
-	protected JNIObject(long ptr) {
-		mPointer = ptr;
-		addToTable();
-	}
-	protected void finalize() {
-		purge();
+	public SinkInput(PulseContext pulse, long ptr) {
+		super(pulse, ptr);
 	}
 	
-	/* 
-	 * Delete object being pointed to, remove self from pointer table
-	 */
-	public synchronized void purge() {
-		ptrTable.remove(new Long(mPointer));
+	public void update(long ptr) {
+		JNIPopulateStruct(ptr);
 	}
 	
-	public static JNIObject getByPointer(long ptr) {
-		return getByPointer(new Long(ptr));
+	public String getName() {
+		return mName;
 	}
-	public static JNIObject getByPointer(Long ptr) {
-		return ptrTable.get(ptr);
+	public String getDescriptiveName() {
+		if (mAppName != null) 
+			return mAppName + " - " + mName;
+		return mName;
 	}
-	protected void addToTable() {
-		ptrTable.put(new Long(mPointer), this);
+	
+	public String getAppName() {
+		return mAppName;
 	}
-	public long getPointer() {
-		return mPointer;
+
+	public boolean isMuted() {
+		return false;
 	}
+	
+	public void setMute(boolean mute, SuccessCallback cb) {
+		Log.d("Reverb", ""+(mPulse == null));
+		mPulse.setSinkInputMute(mIndex, mute, cb);
+	}
+	public void setVolume(Volume volume, SuccessCallback cb) {
+		Log.d("Reverb", ""+(mPulse == null));
+		mPulse.setSinkInputVolume(mIndex, volume, cb);
+	}
+	
+	public String toString() {
+		return mName;
+	}
+	
+	private final native void JNIPopulateStruct(long pSinkInputInfo);
 }

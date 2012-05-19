@@ -1,7 +1,7 @@
 /*******************************************************************************
 *Copyright (c) 2012 Harrison Chapman.
 *
-*This file is part of Reverb.
+*This file is part of Libpulse-android.
 *
 *    Reverb is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@
 #include "context_util.h"
 
 JNIEXPORT jlong JNICALL
-Java_com_harrcharr_reverb_pulse_PulseContext_JNICreate(
+Java_com_harrcharr_pulse_PulseContext_JNICreate(
 		JNIEnv *jenv, jclass jcls, pa_threaded_mainloop *m) {
 	dlog(0, "%d", m);
 	pa_mainloop_api *api = pa_threaded_mainloop_get_api(m);
@@ -40,7 +40,7 @@ Java_com_harrcharr_reverb_pulse_PulseContext_JNICreate(
 }
 
 JNIEXPORT jint JNICALL
-Java_com_harrcharr_reverb_pulse_PulseContext_connect(
+Java_com_harrcharr_pulse_PulseContext_connect(
 		JNIEnv *jenv, jobject jobj, jstring server) {
 	pa_context *c = (pa_context *)get_obj_ptr(jenv, jobj);
 
@@ -60,7 +60,7 @@ Java_com_harrcharr_reverb_pulse_PulseContext_connect(
 }
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_PulseContext_disconnect(
+Java_com_harrcharr_pulse_PulseContext_disconnect(
 		JNIEnv *jenv, jobject jobj) {
 	pa_context *c = (pa_context *)get_obj_ptr(jenv, jobj);
 	pa_context_disconnect(c);
@@ -68,14 +68,14 @@ Java_com_harrcharr_reverb_pulse_PulseContext_disconnect(
 }
 
 JNIEXPORT jint JNICALL
-Java_com_harrcharr_reverb_pulse_PulseContext_getStatus(
+Java_com_harrcharr_pulse_PulseContext_getStatus(
 		JNIEnv *jenv, jobject jobj) {
 	pa_context *c = (pa_context *)get_obj_ptr(jenv, jobj);
 	return pa_context_get_state(c);
 }
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_PulseContext_setStateCallback(
+Java_com_harrcharr_pulse_PulseContext_setStateCallback(
 		JNIEnv *jenv, jobject jobj, jobject runnable) {
 	pa_context *c = (pa_context *)get_obj_ptr(jenv, jobj);
 
@@ -88,7 +88,7 @@ Java_com_harrcharr_reverb_pulse_PulseContext_setStateCallback(
 }
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_PulseContext_getSinkInfoByIndex(
+Java_com_harrcharr_pulse_PulseContext_getSinkInfo(
 		JNIEnv *jenv, jobject jcontext, jint idx, jobject runnable) {
 	context_synchronized_info_call(
 			jenv, jcontext, runnable,
@@ -97,7 +97,17 @@ Java_com_harrcharr_reverb_pulse_PulseContext_getSinkInfoByIndex(
 }
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_PulseContext_setSinkMute(
+Java_com_harrcharr_pulse_PulseContext_getSinkInfoList(
+		JNIEnv *jenv, jobject jcontext, jobject runnable) {
+	context_synchronized_info_list_call(
+			jenv, jcontext, runnable,
+			&pa_context_get_sink_info_list,
+			info_cb);
+}
+
+
+JNIEXPORT void JNICALL
+Java_com_harrcharr_pulse_PulseContext_setSinkMute(
 		JNIEnv *jenv, jobject jcontext, jint idx, jboolean mute, jobject runnable) {
 	context_synchronized_mute_call(
 			jenv, jcontext, runnable,
@@ -106,7 +116,7 @@ Java_com_harrcharr_reverb_pulse_PulseContext_setSinkMute(
 }
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_PulseContext_getSinkInputInfoList(
+Java_com_harrcharr_pulse_PulseContext_getSinkInputInfoList(
 		JNIEnv *jenv, jobject jcontext, jobject runnable) {
 	context_synchronized_info_list_call(
 			jenv, jcontext, runnable,
@@ -115,7 +125,7 @@ Java_com_harrcharr_reverb_pulse_PulseContext_getSinkInputInfoList(
 }
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_PulseContext_getSinkInputInfo(
+Java_com_harrcharr_pulse_PulseContext_getSinkInputInfo(
 		JNIEnv *jenv, jobject jcontext, jint idx,
 		jobject runnable) {
 	context_synchronized_info_call(
@@ -126,7 +136,7 @@ Java_com_harrcharr_reverb_pulse_PulseContext_getSinkInputInfo(
 
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_PulseContext_setSinkInputMute(
+Java_com_harrcharr_pulse_PulseContext_setSinkInputMute(
 		JNIEnv *jenv, jobject jcontext, jint idx, jboolean mute,
 		jobject runnable) {
 	context_synchronized_mute_call(
@@ -136,7 +146,7 @@ Java_com_harrcharr_reverb_pulse_PulseContext_setSinkInputMute(
 }
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_PulseContext_setSinkInputVolume(
+Java_com_harrcharr_pulse_PulseContext_setSinkInputVolume(
 		JNIEnv *jenv, jobject jcontext,
 		jint idx, jintArray volumes,
 		jobject runnable) {
@@ -147,7 +157,7 @@ Java_com_harrcharr_reverb_pulse_PulseContext_setSinkInputVolume(
 }
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_PulseContext_getClientInfo(
+Java_com_harrcharr_pulse_PulseContext_getClientInfo(
 		JNIEnv *jenv, jobject jcontext, jint idx, jobject runnable) {
 	context_synchronized_info_call(
 			jenv, jcontext, runnable,
@@ -156,7 +166,7 @@ Java_com_harrcharr_reverb_pulse_PulseContext_getClientInfo(
 }
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_PulseContext_getClientInfoList(
+Java_com_harrcharr_pulse_PulseContext_getClientInfoList(
 		JNIEnv *jenv, jobject jcontext, jobject runnable) {
 	context_synchronized_info_list_call(
 			jenv, jcontext, runnable,
@@ -165,7 +175,7 @@ Java_com_harrcharr_reverb_pulse_PulseContext_getClientInfoList(
 }
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_PulseContext_setConnectionReadyCallback(
+Java_com_harrcharr_pulse_PulseContext_setConnectionReadyCallback(
 		JNIEnv *jenv, jobject jcontext, jobject runnable) {
 	pa_context *c = get_context_ptr(jenv, jcontext);
 	jni_pa_state_cbs_t *cbs = get_state_cbs_ptr(jenv, jcontext);
@@ -184,7 +194,7 @@ Java_com_harrcharr_reverb_pulse_PulseContext_setConnectionReadyCallback(
 }
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_PulseContext_setConnectionFailedCallback(
+Java_com_harrcharr_pulse_PulseContext_setConnectionFailedCallback(
 		JNIEnv *jenv, jobject jcontext, jobject runnable) {
 	pa_context *c = get_context_ptr(jenv, jcontext);
 	jni_pa_state_cbs_t *cbs = get_state_cbs_ptr(jenv, jcontext);
@@ -204,7 +214,7 @@ Java_com_harrcharr_reverb_pulse_PulseContext_setConnectionFailedCallback(
 
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_PulseContext_JNISubscribeSinkInput(
+Java_com_harrcharr_pulse_PulseContext_JNISubscribeSinkInput(
 		JNIEnv *jenv, jobject jcontext, jobject runnable) {
 	pa_context *c = get_context_ptr(jenv, jcontext);
 	jni_pa_event_cbs_t *cbs = get_event_cbs_ptr(jenv, jcontext);
@@ -224,10 +234,35 @@ Java_com_harrcharr_reverb_pulse_PulseContext_JNISubscribeSinkInput(
 }
 
 JNIEXPORT void JNICALL
-Java_com_harrcharr_reverb_pulse_PulseContext_JNISubscribe(
-		JNIEnv *jenv, jclass jcls, jlong c_ptr, jlong m_ptr) {
-	pa_context *c = (pa_context *)c_ptr;
-	pa_threaded_mainloop *m = (pa_threaded_mainloop *)m_ptr;
+Java_com_harrcharr_pulse_PulseContext_JNISubscribeSink(
+		JNIEnv *jenv, jobject jcontext, jobject runnable) {
+	pa_context *c = get_context_ptr(jenv, jcontext);
+	jni_pa_event_cbs_t *cbs = get_event_cbs_ptr(jenv, jcontext);
+
+	if (cbs == NULL && runnable != NULL) {
+		cbs = new_event_cbs();
+		set_event_cbs_ptr(jenv, jcontext, cbs);
+		pa_context_set_subscribe_callback(c, context_subscription_cb, cbs);
+	}
+	if (cbs != NULL && cbs->sink_cbo != NULL) {
+		del_cb_globalref(jenv, cbs->sink_cbo);
+		cbs->sink_cbo = NULL;
+	}
+	if (runnable != NULL) {
+		cbs->sink_cbo = get_cb_globalref(jenv, jcontext, runnable);
+	}
+}
+
+JNIEXPORT void JNICALL
+Java_com_harrcharr_pulse_PulseContext_JNISubscribe(
+		JNIEnv *jenv, jobject jcontext) {
+	pa_context *c = get_context_ptr(jenv, jcontext);
+	pa_threaded_mainloop *m = get_mainloop_ptr(jenv, jcontext);
+
+	LOGE("Subscribing, pulse state %d", pa_context_get_state(c));
+	LOGE("Subscribing, pulse state %d", pa_context_get_state(c));
+	LOGE("Subscribing, pulse state %d", pa_context_get_state(c));
+
 	pa_threaded_mainloop_lock(m);
 
 	pa_operation *o;

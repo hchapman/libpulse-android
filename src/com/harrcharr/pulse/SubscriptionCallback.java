@@ -19,7 +19,7 @@
  * Contributors:
  *     Harrison Chapman - initial API and implementation
  ******************************************************************************/
-package com.harrcharr.reverb.pulse;
+package com.harrcharr.pulse;
 
 public abstract class SubscriptionCallback extends JniCallback {
 	public final static int EVENT_REMOVE = 32;

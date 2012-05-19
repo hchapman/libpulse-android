@@ -19,22 +19,22 @@
  * Contributors:
  *     Harrison Chapman - initial API and implementation
  ******************************************************************************/
-package com.harrcharr.reverb.pulse;
+package com.harrcharr.pulse;
 
-public class Mainloop extends JNIObject {
-	static {
-		System.loadLibrary("json");
-		System.loadLibrary("sndfile");
-		System.loadLibrary("pulsecommon-UNKNOWN.UNKNOWN");
-		System.loadLibrary("pulse");
-		System.loadLibrary("pulse_interface");
+public abstract class StreamNode extends PulseNode {
+	protected boolean mMuted;
+	protected boolean mCorked;
+	
+	protected Volume mVolume;
+	
+	public StreamNode(PulseContext pulse, long iPtr) {
+		super(pulse, iPtr);
 	}
 	
-	public Mainloop() {
-		super(Mainloop.JNINew());
-		Mainloop.JNIStart(getPointer());
+	public Volume getVolume() {
+		return mVolume;
 	}
 	
-	private final static native long JNINew();	
-	private final static native long JNIStart(long pMainloop);
+	public abstract void setMute(boolean mute, SuccessCallback c);
+	public abstract void setVolume(Volume volume, SuccessCallback c);
 }

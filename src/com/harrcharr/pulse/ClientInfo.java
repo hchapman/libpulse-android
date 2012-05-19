@@ -19,8 +19,30 @@
  * Contributors:
  *     Harrison Chapman - initial API and implementation
  ******************************************************************************/
-package com.harrcharr.reverb.pulse;
+package com.harrcharr.pulse;
 
-public abstract class SuccessCallback extends JniCallback {
-	public abstract void run(int result);
+public class ClientInfo extends PulseNode {
+	String sName;
+	
+	public ClientInfo(PulseContext pulse, long ptr) {
+		super(pulse, ptr);
+	}
+	
+	public void update(long ptr) {
+		JNIPopulateStruct(ptr);
+	}
+	public String getName() {
+		return sName;
+	}
+	
+	public String toString() {
+		return sName;
+	}
+	
+	private final native void JNIPopulateStruct(long pClientInfo);
+
+	@Override
+	public String getDescriptiveName() {
+		return sName;
+	}
 }
