@@ -45,8 +45,21 @@ public class Volume {
 		return mVolumes[0];
 	}
 	
-	public void changeVolume(int channel, int volume) {
+	public void setVolume(int channel, int volume) {
 		mVolumes[channel] = volume;
+	}
+	public void setVolume(int volume) {
+		for (int i = 0; i < mVolumes.length; i++) {
+			mVolumes[i] = volume;
+		}
+	}
+	
+	public static double asPercent(int volume, int precision) {
+		return ((long)((double)volume * 100.0 * Math.pow(10, precision) / (double)Volume.NORM)) / Math.pow(10, precision);
+	}
+	
+	public static double asDecibels(int volume) {
+		return 0.0;
 	}
 //	public Volume(char channels, int[] values) {
 //		// init it somehow maybe
