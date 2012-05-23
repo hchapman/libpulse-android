@@ -23,7 +23,6 @@ package com.harrcharr.pulse;
 
 public abstract class StreamNode extends PulseNode {
 	protected boolean mMuted;
-	protected boolean mCorked;
 	
 	protected Volume mVolume;
 	
@@ -33,6 +32,10 @@ public abstract class StreamNode extends PulseNode {
 	
 	public Volume getVolume() {
 		return mVolume;
+	}
+	
+	public boolean isMuted() {
+		return mMuted;
 	}
 	
 	public abstract void setMute(boolean mute, SuccessCallback c);

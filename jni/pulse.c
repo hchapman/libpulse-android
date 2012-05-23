@@ -39,7 +39,7 @@ extern jclass jcls_volume;
 
 inline void set_field_string(JNIEnv *jenv,
 		jobject jobj, jclass cls,
-		char *fname, char *data) {
+		const char *fname, const char *data) {
 	jfieldID fid = (*jenv)->GetFieldID(jenv, cls, fname, "Ljava/lang/String;");
 	if (fid == NULL) {
 		LOGE("Unable to find field %s", fname);
@@ -54,31 +54,43 @@ inline void set_field_string(JNIEnv *jenv,
 
 inline void set_field_int(JNIEnv *jenv,
 		jobject jobj, jclass cls,
-		char *fname, int data) {
+		const char *fname, int data) {
 	jfieldID fid = (*jenv)->GetFieldID(jenv, cls, fname, "I");
 	if (fid == NULL) {
 		LOGE("Unable to find field %s", fname);
 		return; // Field not found
 	}
 
-	(*jenv)->SetIntField(jenv, jobj, fid, data);
+	(*jenv)->SetIntField(jenv, jobj, fid, (jint)data);
+}
+
+inline void set_field_boolean(JNIEnv *jenv,
+		jobject jobj, jclass cls,
+		const char *fname, int data) {
+	jfieldID fid = (*jenv)->GetFieldID(jenv, cls, fname, "Z");
+	if (fid == NULL) {
+		LOGE("Unable to find field %s", fname);
+		return; // Field not found
+	}
+
+	(*jenv)->SetBooleanField(jenv, jobj, fid, (jboolean)data);
 }
 
 inline void set_field_long(JNIEnv *jenv,
 		jobject jobj, jclass cls,
-		char *fname, long data) {
+		const char *fname, long data) {
 	jfieldID fid = (*jenv)->GetFieldID(jenv, cls, fname, "J");
 	if (fid == NULL) {
 		LOGE("Unable to find field %s", fname);
 		return; // Field not found
 	}
 
-	(*jenv)->SetLongField(jenv, jobj, fid, data);
+	(*jenv)->SetLongField(jenv, jobj, fid, (jlong)data);
 }
 
 inline void set_field_volume(JNIEnv *jenv,
 		jobject jobj, jclass cls,
-		char *fname, pa_cvolume* v) {
+		const char *fname, pa_cvolume* v) {
 	jfieldID fid = (*jenv)->GetFieldID(jenv, cls, fname,
 			"Lcom/harrcharr/pulse/Volume;");
 	if (fid == NULL) {
@@ -121,35 +133,67 @@ JNIEXPORT void JNICALL
 Java_com_harrcharr_pulse_SinkInfo_JNIPopulateStruct(
 		JNIEnv *jenv, jobject jobj, jlong i_ptr) {
 	pa_sink_info *i = (pa_sink_info*)i_ptr;
-	jstring jstr;
-	jfieldID fid;
-	dlog(0, "About to populate structure i ptr %d", i);
-	dlog(0, i->description);
-	dlog(0, "I'm getting a little closer");
 
 	jclass cls = (*jenv)->GetObjectClass(jenv, jobj);
 	set_field_string(jenv, jobj, cls, "sName", i->name);
 	set_field_string(jenv, jobj, cls, "sDescription", i->description);
+
 	set_field_int(jenv, jobj, cls, "mIndex", i->index);
+
 	set_field_volume(jenv, jobj, cls, "mVolume", &(i->volume));
+
+	set_field_boolean(jenv, jobj, cls, "mMuted", i->mute);
 }
 
 JNIEXPORT void JNICALL
 Java_com_harrcharr_pulse_SinkInput_JNIPopulateStruct(
 		JNIEnv *jenv, jobject jobj, jlong i_ptr) {
 	pa_sink_input_info *i = (pa_sink_input_info*)i_ptr;
-	jstring jstr;
-	jfieldID fid;
-
-	LOGI("Sink input index # %d", i->index);
-	LOGI("Name of sink input, %s", i->name);
-
-	LOGD("The volume of %s is %d", i->name, (i->volume).values[0]);
 
 	jclass cls = (*jenv)->GetObjectClass(jenv, jobj);
 	set_field_string(jenv, jobj, cls, "mName", i->name);
+
 	set_field_int(jenv, jobj, cls, "mIndex", i->index);
+	set_field_int(jenv, jobj, cls, "mOwnerModuleIndex", i->owner_module);
+	set_field_int(jenv, jobj, cls, "mClientIndex", i->client);
+	set_field_int(jenv, jobj, cls, "mOwnerStreamIndex", i->sink);
+
 	set_field_volume(jenv, jobj, cls, "mVolume", &(i->volume));
+
+	set_field_boolean(jenv, jobj, cls, "mMuted", i->mute);
+	set_field_boolean(jenv, jobj, cls, "mCorked", i->corked);
+	set_field_boolean(jenv, jobj, cls, "mHasVolume", i->has_volume);
+	set_field_boolean(jenv, jobj, cls, "mVolumeWritable", i->volume_writable);
+
+	// Set important proplist values, should they exist.
+	pa_proplist *p = i->proplist;
+	if(pa_proplist_contains(p, PA_PROP_APPLICATION_NAME))
+		set_field_string(jenv, jobj, cls, "mAppName",
+				pa_proplist_gets(p, PA_PROP_APPLICATION_NAME));
+	LOGD(pa_proplist_to_string(i->proplist));
+//	set_field_proplist(jenv, jobj, cls, "mProplist", i->proplist);
+}
+
+
+JNIEXPORT void JNICALL
+Java_com_harrcharr_pulse_SourceOutput_JNIPopulateStruct(
+		JNIEnv *jenv, jobject jobj, jlong i_ptr) {
+	pa_source_output_info *i = (pa_source_output_info*)i_ptr;
+
+	jclass cls = (*jenv)->GetObjectClass(jenv, jobj);
+	set_field_string(jenv, jobj, cls, "mName", i->name);
+
+	set_field_int(jenv, jobj, cls, "mIndex", i->index);
+	set_field_int(jenv, jobj, cls, "mOwnerModuleIndex", i->owner_module);
+	set_field_int(jenv, jobj, cls, "mClientIndex", i->client);
+	set_field_int(jenv, jobj, cls, "mOwnerStreamIndex", i->source);
+
+	set_field_volume(jenv, jobj, cls, "mVolume", &(i->volume));
+
+	set_field_boolean(jenv, jobj, cls, "mMuted", i->mute);
+	set_field_boolean(jenv, jobj, cls, "mCorked", i->corked);
+	set_field_boolean(jenv, jobj, cls, "mHasVolume", i->has_volume);
+	set_field_boolean(jenv, jobj, cls, "mVolumeWritable", i->volume_writable);
 
 	// Set important proplist values, should they exist.
 	pa_proplist *p = i->proplist;

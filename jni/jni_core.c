@@ -33,10 +33,8 @@ const char *k_volume_path =
 		"com/harrcharr/pulse/Volume";
 
 jenv_status_t get_jnienv(JNIEnv **env) {
-	dlog(0, "about to get jnienv");
 	int status = (*g_vm)->GetEnv(g_vm, (void **) env, JNI_VERSION_1_6);
 	if(status < 0){
-		dlog(0, "We have to attach.");
 		// We're running from a C thread, so attach to Java
 		status = (*g_vm)->AttachCurrentThread(g_vm, env, NULL);
 		if(status < 0) {

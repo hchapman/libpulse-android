@@ -413,17 +413,19 @@ void info_cb(pa_context* c, const void *i,
     assert(m);
 
 	if (eol < 0) {
-		LOGE("Error returned from an info query");
-		LOGI("Data returned is at %d", i);
 	    pa_threaded_mainloop_signal(m, 0);
 	    del_cb_globalref(env, cbdata->cb_runnable);
 	    free(cbdata);
 	    detach_jnienv(status);
+
+		if (pa_context_errno(c) == PA_ERR_NOENTITY)
+			return;
+
+		LOGE("Error returned from info request");
 	    return;
 	}
 
 	if (eol > 0) {
-		LOGD("About to delete our runnable");
 		pa_threaded_mainloop_signal(m, 0);
 		del_cb_globalref(env, cbdata->cb_runnable);
 	    free(cbdata);
@@ -472,9 +474,9 @@ void success_cb(pa_context* c, int success, void *userdata) {
     assert(m);
 
 	if ((cls = (*env)->GetObjectClass(env, cbdata->cb_runnable))) {
-		if ((mid = (*env)->GetMethodID(env, cls, "run", "(IJ)V"))) {
+		if ((mid = (*env)->GetMethodID(env, cls, "run", "()V"))) {
 			// Run the actual Java callback method
-			//(*env)->CallVoidMethod(env, cbdata->cb_runnable, mid, (jint)i->index, (jlong)i);
+			(*env)->CallVoidMethod(env, cbdata->cb_runnable, mid);
 		}
 	}
 

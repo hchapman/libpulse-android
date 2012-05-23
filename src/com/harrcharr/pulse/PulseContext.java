@@ -111,6 +111,16 @@ public class PulseContext extends JNIObject {
 		JNISubscribeSinkInput(cb);
 	}
 	private final native void JNISubscribeSinkInput(SubscriptionCallback cb);
+	
+	public void subscribeSourceOutput(SubscriptionCallback cb) {
+		subscribe();
+		JNISubscribeSourceOutput(cb);
+	}
+	private final native void JNISubscribeSourceOutput(SubscriptionCallback cb);
+
+	public Stream newStream(String name) {
+		return new Stream(this, name);
+	}
 
 	public void subscribeSink(SubscriptionCallback cb) {
 		subscribe();
@@ -183,6 +193,12 @@ public class PulseContext extends JNIObject {
 	public final native void getSinkInputInfoList(InfoCallback<SinkInput> cb);
 	public final native void setSinkInputMute(int idx, boolean mute, SuccessCallback cb);
 	private synchronized final native void setSinkInputVolume(int idx, int[] volumes, SuccessCallback cb);
+
+	// Source Output
+	public final native void getSourceOutputInfo(int idx, InfoCallback<SourceOutput> cb);
+	public final native void getSourceOutputInfoList(InfoCallback<SourceOutput> cb);
+	public final native void setSourceOutputMute(int idx, boolean mute, SuccessCallback cb);
+	private synchronized final native void setSourceOutputVolume(int idx, int[] volumes, SuccessCallback cb);
 	
 	// Client
 	public final native void getClientInfo(int idx, InfoCallback<ClientInfo> cb);

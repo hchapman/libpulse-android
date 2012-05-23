@@ -169,6 +169,47 @@ Java_com_harrcharr_pulse_PulseContext_setSinkInputVolume(
 }
 
 JNIEXPORT void JNICALL
+Java_com_harrcharr_pulse_PulseContext_getSourceOutputInfoList(
+		JNIEnv *jenv, jobject jcontext, jobject runnable) {
+	context_synchronized_info_list_call(
+			jenv, jcontext, runnable,
+			&pa_context_get_source_output_info_list,
+			info_cb);
+}
+
+JNIEXPORT void JNICALL
+Java_com_harrcharr_pulse_PulseContext_getSourceOutputInfo(
+		JNIEnv *jenv, jobject jcontext, jint idx,
+		jobject runnable) {
+	context_synchronized_info_call(
+			jenv, jcontext, runnable,
+			&pa_context_get_source_output_info, (uint32_t)idx,
+			info_cb);
+}
+
+
+JNIEXPORT void JNICALL
+Java_com_harrcharr_pulse_PulseContext_setSourceOutputMute(
+		JNIEnv *jenv, jobject jcontext, jint idx, jboolean mute,
+		jobject runnable) {
+	context_synchronized_mute_call(
+			jenv, jcontext, runnable,
+			&pa_context_set_source_output_mute, (uint32_t)idx,
+			(int) mute, success_cb);
+}
+
+JNIEXPORT void JNICALL
+Java_com_harrcharr_pulse_PulseContext_setSourceOutputVolume(
+		JNIEnv *jenv, jobject jcontext,
+		jint idx, jintArray volumes,
+		jobject runnable) {
+	context_synchronized_volume_call(
+			jenv, jcontext, runnable,
+			&pa_context_set_source_output_volume, (uint32_t)idx,
+			volumes, success_cb);
+}
+
+JNIEXPORT void JNICALL
 Java_com_harrcharr_pulse_PulseContext_getClientInfo(
 		JNIEnv *jenv, jobject jcontext, jint idx, jobject runnable) {
 	context_synchronized_info_call(
@@ -242,6 +283,26 @@ Java_com_harrcharr_pulse_PulseContext_JNISubscribeSinkInput(
 	}
 	if (runnable != NULL) {
 		cbs->sink_input_cbo = get_cb_globalref(jenv, jcontext, runnable);
+	}
+}
+
+JNIEXPORT void JNICALL
+Java_com_harrcharr_pulse_PulseContext_JNISubscribeSourceOutput(
+		JNIEnv *jenv, jobject jcontext, jobject runnable) {
+	pa_context *c = get_context_ptr(jenv, jcontext);
+	jni_pa_event_cbs_t *cbs = get_event_cbs_ptr(jenv, jcontext);
+
+	if (cbs == NULL && runnable != NULL) {
+		cbs = new_event_cbs();
+		set_event_cbs_ptr(jenv, jcontext, cbs);
+		pa_context_set_subscribe_callback(c, context_subscription_cb, cbs);
+	}
+	if (cbs != NULL && cbs->source_output_cbo != NULL) {
+		del_cb_globalref(jenv, cbs->source_output_cbo);
+		cbs->source_output_cbo = NULL;
+	}
+	if (runnable != NULL) {
+		cbs->source_output_cbo = get_cb_globalref(jenv, jcontext, runnable);
 	}
 }
 

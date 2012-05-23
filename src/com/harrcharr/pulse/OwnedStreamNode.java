@@ -21,37 +21,49 @@
  ******************************************************************************/
 package com.harrcharr.pulse;
 
-public class SinkInfo extends StreamNode {
-	String sName;
-	String sDescription;
+import android.util.Log;
+
+public abstract class OwnedStreamNode extends StreamNode {	
+	protected int mOwnerModuleIndex;
+	protected int mClientIndex;
+	protected int mOwnerStreamIndex;
 	
-	public SinkInfo(PulseContext pulse, long ptr) {
+	protected boolean mCorked;
+	protected boolean mHasVolume;
+	protected boolean mVolumeWritable;
+	
+	// More optional parameters
+	protected String mAppName;
+	
+	public OwnedStreamNode(PulseContext pulse, long ptr) {
 		super(pulse, ptr);
 	}
 	
-	public void update(long ptr) {
-		JNIPopulateStruct(ptr);
+	public String getName() {
+		return mName;
 	}
-	public String getDescription() {
-		return sDescription;
+	public String getDescriptiveName() {
+		if (mAppName != null) 
+			return mAppName + " - " + mName;
+		return mName;
 	}
 	
-	public String toString() {
-		return sName + "\n" + sDescription;
+	public String getAppName() {
+		return mAppName;
+	}
+
+	public boolean isMuted() {
+		return false;
 	}
 	
 	public void setMute(boolean mute, SuccessCallback cb) {
-		mPulse.setSinkMute(mIndex, mute, cb);
+		mPulse.setSinkInputMute(mIndex, mute, cb);
 	}
 	public void setVolume(Volume volume, SuccessCallback cb) {
-		mPulse.setSinkVolume(mIndex, volume, cb);
+		mPulse.setSinkInputVolume(mIndex, volume, cb);
 	}
 	
-	
-	private final native void JNIPopulateStruct(long pSinkInfo);
-
-	@Override
-	public String getDescriptiveName() {
-		return getDescription();
+	public String toString() {
+		return mName;
 	}
 }

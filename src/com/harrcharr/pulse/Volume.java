@@ -57,9 +57,15 @@ public class Volume {
 	public static double asPercent(int volume, int precision) {
 		return ((long)((double)volume * 100.0 * Math.pow(10, precision) / (double)Volume.NORM)) / Math.pow(10, precision);
 	}
+	public static double asLinear(int volume) {
+		return Math.pow(((double)volume / (double)Volume.NORM), 3);
+	}
 	
 	public static double asDecibels(int volume) {
-		return 0.0;
+		return (20.0 * Math.log10(asLinear(volume)));
+	}
+	public static double asDecibels(int volume, int precision) {
+		return ((long)(asDecibels(volume) * Math.pow(10, precision))) / Math.pow(10, precision);
 	}
 //	public Volume(char channels, int[] values) {
 //		// init it somehow maybe

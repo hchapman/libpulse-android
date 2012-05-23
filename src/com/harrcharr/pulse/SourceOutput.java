@@ -1,7 +1,7 @@
 package com.harrcharr.pulse;
 
-public class SinkInput extends OwnedStreamNode {
-	public SinkInput(PulseContext pulse, long ptr) {
+public class SourceOutput extends OwnedStreamNode {
+	public SourceOutput(PulseContext pulse, long ptr) {
 		super(pulse, ptr);
 	}
 	
