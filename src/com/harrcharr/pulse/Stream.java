@@ -11,7 +11,6 @@ public class Stream extends JNIObject {
 	}
 	public native void setMonitorStream(int idx);
 	
-	
 	public native void setReadCallback(Runnable cb);
 	public native void setSuspendedCallback(Runnable cb);
 	public native void connectRecord();

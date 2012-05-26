@@ -134,6 +134,9 @@ public class PulseContext extends JNIObject {
 	public void setSinkInputVolume(int idx, Volume volume, SuccessCallback cb) {
 		setSinkInputVolume(idx, volume.getVolumes(), cb);
 	}
+	public void setSourceOutputVolume(int idx, Volume volume, SuccessCallback cb) {
+		setSourceOutputVolume(idx, volume.getVolumes(), cb);
+	}
 	
 	public boolean isReady() {
 		return mStatus == ContextState.READY;

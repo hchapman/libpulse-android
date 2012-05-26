@@ -309,7 +309,11 @@ void context_subscription_cb(pa_context* c, pa_subscription_event_type_t t,
             break;
 
         case PA_SUBSCRIPTION_EVENT_SOURCE:
-        	break;
+        	LOGD("Source event");
+        	if (cbs->source_cbo != NULL)
+        		call_subscription_run(t & PA_SUBSCRIPTION_EVENT_TYPE_MASK,
+        				idx, cbs->source_cbo);
+            break;
 
         case PA_SUBSCRIPTION_EVENT_SINK_INPUT:
         	LOGD("Sink input event");
@@ -319,6 +323,10 @@ void context_subscription_cb(pa_context* c, pa_subscription_event_type_t t,
             break;
 
         case PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT:
+        	LOGD("Source output event");
+        	if (cbs->source_output_cbo != NULL)
+        		call_subscription_run(t & PA_SUBSCRIPTION_EVENT_TYPE_MASK,
+        				idx, cbs->source_output_cbo);
             break;
 
         case PA_SUBSCRIPTION_EVENT_CLIENT:

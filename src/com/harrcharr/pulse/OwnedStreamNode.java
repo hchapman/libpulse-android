@@ -56,12 +56,7 @@ public abstract class OwnedStreamNode extends StreamNode {
 		return false;
 	}
 	
-	public void setMute(boolean mute, SuccessCallback cb) {
-		mPulse.setSinkInputMute(mIndex, mute, cb);
-	}
-	public void setVolume(Volume volume, SuccessCallback cb) {
-		mPulse.setSinkInputVolume(mIndex, volume, cb);
-	}
+
 	
 	public String toString() {
 		return mName;

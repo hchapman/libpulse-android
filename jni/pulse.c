@@ -170,8 +170,6 @@ Java_com_harrcharr_pulse_SinkInput_JNIPopulateStruct(
 	if(pa_proplist_contains(p, PA_PROP_APPLICATION_NAME))
 		set_field_string(jenv, jobj, cls, "mAppName",
 				pa_proplist_gets(p, PA_PROP_APPLICATION_NAME));
-	LOGD(pa_proplist_to_string(i->proplist));
-//	set_field_proplist(jenv, jobj, cls, "mProplist", i->proplist);
 }
 
 
