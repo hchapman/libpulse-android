@@ -220,12 +220,15 @@ void context_synchronized_volume_call(
 
 	pa_threaded_mainloop_lock(m);
 
+	unsigned channels = (*jenv)->GetArrayLength(jenv, volumes);
+
 	pa_cvolume *v = (pa_cvolume *)malloc(sizeof(pa_cvolume));
 	pa_cvolume_init(v);
-	pa_cvolume_set(v, 2, PA_VOLUME_NORM);
+	pa_cvolume_set(v, channels, PA_VOLUME_NORM);
 
-	(*jenv)->GetIntArrayRegion(jenv, volumes, 0,
-			(*jenv)->GetArrayLength(jenv, volumes), &(v->values));
+	LOGD("Volume valid? %d", pa_cvolume_valid(v));
+
+	(*jenv)->GetIntArrayRegion(jenv, volumes, 0, channels, &(v->values));
 
 	pa_operation *o;
 
@@ -455,7 +458,7 @@ void info_cb(pa_context* c, const void *i,
 }
 
 void success_cb(pa_context* c, int success, void *userdata) {
-	LOGD("freeing");
+	//LOGD("freeing");
 	JNIEnv *env;
 	jclass cls;
 	jmethodID mid;
@@ -464,7 +467,7 @@ void success_cb(pa_context* c, int success, void *userdata) {
 	jni_pa_cb_info_t *cbdata = (jni_pa_cb_info_t*)userdata;
 
 	if(cbdata->to_free != NULL) {
-		LOGD("freeing %d", cbdata->to_free);
+		//LOGD("freeing %d", cbdata->to_free);
 		free(cbdata->to_free);
 		cbdata->to_free = NULL;
 	}
