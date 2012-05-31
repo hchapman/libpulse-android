@@ -26,11 +26,16 @@
 JavaVM *g_vm;
 jclass jcls_context;
 jclass jcls_volume;
+jclass jcls_stream;
 
 const char *k_context_path =
 		"com/harrcharr/pulse/PulseContext";
+const char *k_stream_path =
+		"com/harrcharr/pulse/Stream";
 const char *k_volume_path =
 		"com/harrcharr/pulse/Volume";
+
+
 
 jenv_status_t get_jnienv(JNIEnv **env) {
 	int status = (*g_vm)->GetEnv(g_vm, (void **) env, JNI_VERSION_1_6);
@@ -114,6 +119,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(
 		return -1;
 	}
 	init_class_helper(env, k_context_path, &jcls_context);
+	init_class_helper(env, k_stream_path, &jcls_stream);
 	init_class_helper(env, k_volume_path, &jcls_volume);
 
     return JNI_VERSION_1_6;

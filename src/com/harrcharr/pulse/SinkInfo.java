@@ -22,9 +22,14 @@
 package com.harrcharr.pulse;
 
 public class SinkInfo extends StreamNode {
-	String sName;
-	String sDescription;
+	protected String mName;
+	protected String mDescription;
 	
+	protected int mMonitorSourceIndex;
+	
+	public SinkInfo(PulseContext pulse) {
+		this(pulse, 0);
+	}
 	public SinkInfo(PulseContext pulse, long ptr) {
 		super(pulse, ptr);
 	}
@@ -33,11 +38,11 @@ public class SinkInfo extends StreamNode {
 		JNIPopulateStruct(ptr);
 	}
 	public String getDescription() {
-		return sDescription;
+		return mDescription;
 	}
 	
 	public String toString() {
-		return sName + "\n" + sDescription;
+		return mName + "\n" + mDescription;
 	}
 	
 	public void setMute(boolean mute, SuccessCallback cb) {
@@ -47,6 +52,26 @@ public class SinkInfo extends StreamNode {
 		mPulse.setSinkVolume(mIndex, volume, cb);
 	}
 	
+	public int getSourceIndex() {
+		return mMonitorSourceIndex;
+	}
+	
+	public Stream getNewStream(String name) {
+		final Stream stream = mPulse.newStream(name);
+		
+		return stream;
+	}
+	
+	public void connectRecordStream(Stream stream) {
+		stream.connectRecord(getSourceIndex());
+	}
+	
+	public void update(SinkInfo n) {
+		super.update(n);
+		
+		mName = n.mName;
+		mDescription = n.mDescription;
+	}
 	
 	private final native void JNIPopulateStruct(long pSinkInfo);
 

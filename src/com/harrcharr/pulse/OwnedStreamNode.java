@@ -32,6 +32,8 @@ public abstract class OwnedStreamNode extends StreamNode {
 	protected boolean mHasVolume;
 	protected boolean mVolumeWritable;
 	
+	protected StreamNode mOwner;
+	
 	// More optional parameters
 	protected String mAppName;
 	
@@ -56,7 +58,43 @@ public abstract class OwnedStreamNode extends StreamNode {
 		return false;
 	}
 	
-
+	public int getOwnerIndex() {
+		return mOwnerStreamIndex;
+	}
+	
+	public int getSourceIndex() {
+		return mOwner.getSourceIndex();
+	}
+	
+	public Stream getNewStream(String name) {
+		final Stream stream = mPulse.newStream(name + "for" + getDescriptiveName());
+		stream.setMonitorStream(this);
+		
+		return stream;
+	}
+	
+	public void connectRecordStream(Stream stream) {
+		stream.connectRecord(getSourceIndex());
+	}
+	
+	public void setOwner(StreamNode n) {
+		// Change to OwnerStreamNode when implemented
+		mOwner = n;
+	}
+	
+	public void update(OwnedStreamNode n) {
+		super.update(n);
+		
+		mOwnerModuleIndex = n.mOwnerModuleIndex;
+		mClientIndex = n.mClientIndex;
+		mOwnerStreamIndex = n.mOwnerStreamIndex;
+		
+		mCorked = n.mCorked;
+		mHasVolume = n.mHasVolume;
+		mVolumeWritable = n.mVolumeWritable;
+		
+		mAppName = n.mAppName;
+	}
 	
 	public String toString() {
 		return mName;

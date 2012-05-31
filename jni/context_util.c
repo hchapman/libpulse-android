@@ -25,11 +25,11 @@
 
 extern jclass jcls_context;
 
-jni_pa_cb_info_t *new_cbinfo(JNIEnv *jenv, jobject jcontext, jobject jcb,
+jni_pa_cb_info_t *new_cbinfo(JNIEnv *jenv, jobject jobj, jobject jcb,
 		pa_threaded_mainloop *m, void *to_free) {
 	jni_pa_cb_info_t *cbinfo = (jni_pa_cb_info_t*)malloc(sizeof(jni_pa_cb_info_t));
 	if (jcb != NULL) {
-		cbinfo->cb_runnable = get_cb_globalref(jenv, jcontext, jcb);
+		cbinfo->cb_runnable = get_cb_globalref(jenv, jobj, jcb);
 	} else {
 		cbinfo->cb_runnable = NULL;
 	}

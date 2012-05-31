@@ -43,6 +43,16 @@ public abstract class PulseNode extends JNIStruct {
 		return mIndex;
 	}
 	
+	public void update(PulseNode n) {
+		mPulse = n.mPulse;
+		
+		mIndex = n.mIndex;
+		mOwnerModule = n.mOwnerModule;
+		
+		mName = n.mName;
+		mDriver = n.mDriver;
+	}
+	
 	/*
 	 * Returns a human-readable name for this PulseNode.
 	 */

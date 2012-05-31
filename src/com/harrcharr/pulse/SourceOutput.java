@@ -15,6 +15,10 @@ public class SourceOutput extends OwnedStreamNode {
 	public void setVolume(Volume volume, SuccessCallback cb) {
 		mPulse.setSourceOutputVolume(mIndex, volume, cb);
 	}
+	
+	public void update(SourceOutput n) {
+		super.update(n);
+	}
 
 	private final native void JNIPopulateStruct(long pSinkInputInfo);
 }

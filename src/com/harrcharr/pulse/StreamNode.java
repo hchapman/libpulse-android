@@ -38,6 +38,19 @@ public abstract class StreamNode extends PulseNode {
 		return mMuted;
 	}
 	
+	public void update(StreamNode n) {
+		super.update(n);
+		
+		mMuted = n.mMuted;
+		
+		mVolume = n.mVolume;
+	}
+	
+	public abstract int getSourceIndex();
+	
+	public abstract Stream getNewStream(String name);
+	public abstract void connectRecordStream(Stream stream);
+	
 	public abstract void setMute(boolean mute, SuccessCallback c);
 	public abstract void setVolume(Volume volume, SuccessCallback c);
 }

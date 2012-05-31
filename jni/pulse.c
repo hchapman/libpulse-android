@@ -135,10 +135,11 @@ Java_com_harrcharr_pulse_SinkInfo_JNIPopulateStruct(
 	pa_sink_info *i = (pa_sink_info*)i_ptr;
 
 	jclass cls = (*jenv)->GetObjectClass(jenv, jobj);
-	set_field_string(jenv, jobj, cls, "sName", i->name);
-	set_field_string(jenv, jobj, cls, "sDescription", i->description);
+	set_field_string(jenv, jobj, cls, "mName", i->name);
+	set_field_string(jenv, jobj, cls, "mDescription", i->description);
 
 	set_field_int(jenv, jobj, cls, "mIndex", i->index);
+	set_field_int(jenv, jobj, cls, "mMonitorSourceIndex", i->monitor_source);
 
 	set_field_volume(jenv, jobj, cls, "mVolume", &(i->volume));
 

@@ -15,6 +15,10 @@ public class SinkInput extends OwnedStreamNode {
 	public void setVolume(Volume volume, SuccessCallback cb) {
 		mPulse.setSinkInputVolume(mIndex, volume, cb);
 	}
+	
+	public void update(SinkInput n) {
+		super.update(n);
+	}
 
 	private final native void JNIPopulateStruct(long pSinkInputInfo);
 }

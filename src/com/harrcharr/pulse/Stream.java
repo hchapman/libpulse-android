@@ -6,12 +6,23 @@ public class Stream extends JNIObject {
 	}
 	private static native long JNINewStream(long cPtr, String name);
 	
-	public void setMonitorStream(StreamNode node) {
+	public void setMonitorStream(OwnedStreamNode node) {
 		setMonitorStream(node.getIndex());
 	}
 	public native void setMonitorStream(int idx);
 	
-	public native void setReadCallback(Runnable cb);
+	public native void setReadCallback(ReadCallback cb);
 	public native void setSuspendedCallback(Runnable cb);
-	public native void connectRecord();
+	
+	public void connectRecord(StreamNode node){
+		connectRecord(node.getSourceIndex());
+	}
+	public void connectRecord(int idx) {
+		connectRecord(""+idx);
+	}
+	public native void connectRecord(String dev);
+	
+	public static interface ReadCallback {
+		public void run(double vol);
+	}
 }
