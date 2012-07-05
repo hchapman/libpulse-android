@@ -19,6 +19,10 @@ public class SourceOutput extends OwnedStreamNode {
 	public void update(SourceOutput n) {
 		super.update(n);
 	}
+	
+	public void connectRecordStream(Stream s) {
+		
+	}
 
 	private final native void JNIPopulateStruct(long pSinkInputInfo);
 }

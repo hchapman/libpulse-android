@@ -1,12 +1,10 @@
 package com.harrcharr.pulse;
 
-public class SinkInfo extends OwnerStreamNode {	
-	protected int mMonitorSourceIndex;
-
-	public SinkInfo(PulseContext pulse) {
+public class SourceInfo extends OwnerStreamNode {	
+	public SourceInfo(PulseContext pulse) {
 		this(pulse, 0);
 	}
-	public SinkInfo(PulseContext pulse, long ptr) {
+	public SourceInfo(PulseContext pulse, long ptr) {
 		super(pulse, ptr);
 	}
 	
@@ -15,14 +13,14 @@ public class SinkInfo extends OwnerStreamNode {
 	}
 	
 	public void setMute(boolean mute, SuccessCallback cb) {
-		mPulse.setSinkMute(mIndex, mute, cb);
+		mPulse.setSourceMute(mIndex, mute, cb);
 	}
 	public void setVolume(Volume volume, SuccessCallback cb) {
-		mPulse.setSinkVolume(mIndex, volume, cb);
+		mPulse.setSourceVolume(mIndex, volume, cb);
 	}
 	
 	public int getSourceIndex() {
-		return mMonitorSourceIndex;
+		return 0;
 	}
 	
 	private final native void JNIPopulateStruct(long pSinkInfo);

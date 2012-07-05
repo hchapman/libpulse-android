@@ -147,6 +147,22 @@ Java_com_harrcharr_pulse_SinkInfo_JNIPopulateStruct(
 }
 
 JNIEXPORT void JNICALL
+Java_com_harrcharr_pulse_SourceInfo_JNIPopulateStruct(
+		JNIEnv *jenv, jobject jobj, jlong i_ptr) {
+	pa_sink_info *i = (pa_sink_info*)i_ptr;
+
+	jclass cls = (*jenv)->GetObjectClass(jenv, jobj);
+	set_field_string(jenv, jobj, cls, "mName", i->name);
+	set_field_string(jenv, jobj, cls, "mDescription", i->description);
+
+	set_field_int(jenv, jobj, cls, "mIndex", i->index);
+
+	set_field_volume(jenv, jobj, cls, "mVolume", &(i->volume));
+
+	set_field_boolean(jenv, jobj, cls, "mMuted", i->mute);
+}
+
+JNIEXPORT void JNICALL
 Java_com_harrcharr_pulse_SinkInput_JNIPopulateStruct(
 		JNIEnv *jenv, jobject jobj, jlong i_ptr) {
 	pa_sink_input_info *i = (pa_sink_input_info*)i_ptr;
@@ -199,7 +215,7 @@ Java_com_harrcharr_pulse_SourceOutput_JNIPopulateStruct(
 	if(pa_proplist_contains(p, PA_PROP_APPLICATION_NAME))
 		set_field_string(jenv, jobj, cls, "mAppName",
 				pa_proplist_gets(p, PA_PROP_APPLICATION_NAME));
-	LOGD(pa_proplist_to_string(i->proplist));
+//	LOGD(pa_proplist_to_string(i->proplist));
 //	set_field_proplist(jenv, jobj, cls, "mProplist", i->proplist);
 }
 

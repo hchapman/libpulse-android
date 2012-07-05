@@ -67,7 +67,7 @@ public abstract class OwnedStreamNode extends StreamNode {
 	}
 	
 	public Stream getNewStream(String name) {
-		final Stream stream = mPulse.newStream(name + "for" + getDescriptiveName());
+		final Stream stream = mPulse.newStream(name + " for " + getDescriptiveName());
 		stream.setMonitorStream(this);
 		
 		return stream;
@@ -80,6 +80,10 @@ public abstract class OwnedStreamNode extends StreamNode {
 	public void setOwner(StreamNode n) {
 		// Change to OwnerStreamNode when implemented
 		mOwner = n;
+	}
+	
+	public StreamNode getOwner() {
+		return mOwner;
 	}
 	
 	public void update(OwnedStreamNode n) {

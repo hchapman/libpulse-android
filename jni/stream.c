@@ -106,13 +106,16 @@ Java_com_harrcharr_pulse_Stream_JNINewStream(
 	ss.format = PA_SAMPLE_FLOAT32;
 	ss.rate = 25;
 
+	pa_proplist *p = pa_proplist_new();
+	pa_proplist_sets(p, PA_PROP_APPLICATION_NAME, "Reverb PulseAudio Remote");
+
 	const char *sname;
 	sname = (*jenv)->GetStringUTFChars(jenv, server, NULL);
 	if (sname == NULL) {
 		return NULL; /* OutOfMemoryError already thrown */
 	}
 
-	if (!(stream = pa_stream_new((pa_context*)c, sname, &ss, NULL))) {
+	if (!(stream = pa_stream_new_with_proplist((pa_context*)c, sname, &ss, NULL, p))) {
 		LOGE("Failed to create new stream");
 		stream = NULL;
 	}
@@ -123,9 +126,8 @@ Java_com_harrcharr_pulse_Stream_JNINewStream(
 
 JNIEXPORT void JNICALL
 Java_com_harrcharr_pulse_Stream_setMonitorStream(
-		JNIEnv *jenv, jobject jstream, pa_context *c, uint32_t index) {
+		JNIEnv *jenv, jobject jstream, uint32_t index) {
 	pa_stream *stream = get_stream_ptr(jenv, jstream);
-
     pa_stream_set_monitor_stream(stream, index);
 }
 
@@ -150,14 +152,9 @@ Java_com_harrcharr_pulse_Stream_connectRecord(
 			(pa_stream_flags_t) (PA_STREAM_DONT_INHIBIT_AUTO_SUSPEND|
 					PA_STREAM_DONT_MOVE|PA_STREAM_PEAK_DETECT|
 					PA_STREAM_ADJUST_LATENCY)) < 0) {
-		LOGE("Failed to connect to monitoring stream");
+		LOGE("Failed to connect to stream");
 		// Throw an exception to java
 	}
-
-	LOGD("Stream recording at %d", stream);
-	LOGD("Stream is supposed to be connected to %s", dev);
-	LOGD("Stream device is %s", pa_stream_get_device_name(stream));
-	LOGD("Stream status is %d", pa_stream_get_state(stream));
 
     (*jenv)->ReleaseStringUTFChars(jenv, jdev, dev);
 }
