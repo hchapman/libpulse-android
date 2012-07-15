@@ -1,4 +1,0 @@
-Libpulse-android is a JNI interface to functions of libpulse (which communicates with pulseaudio).
-
-As of now, it is focused on providing access to introspection functions of the library, so as to
-enable writing of a remote control volume application (see my project Reverb on github)
