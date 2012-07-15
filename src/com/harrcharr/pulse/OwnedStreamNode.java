@@ -45,8 +45,6 @@ public abstract class OwnedStreamNode extends StreamNode {
 		return mName;
 	}
 	public String getDescriptiveName() {
-		if (mAppName != null) 
-			return mAppName + " - " + mName;
 		return mName;
 	}
 	

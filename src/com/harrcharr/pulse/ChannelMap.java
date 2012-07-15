@@ -21,42 +21,37 @@
  ******************************************************************************/
 package com.harrcharr.pulse;
 
-public abstract class StreamNode extends PulseNode {
-	protected boolean mMuted;
+import java.util.HashMap;
+
+public class ChannelMap {	
+	private static final HashMap<Integer, String> MAP_NAMES = new HashMap<Integer, String>();
+
+	char mChannels;
+	int[] mChannelMap;
 	
-	protected Volume mVolume;
-	protected ChannelMap mChannelMap;
-	
-	public StreamNode(PulseContext pulse, long iPtr) {
-		super(pulse, iPtr);
+	public ChannelMap(int[] map) {
+		mChannelMap = map;
+		mChannels = (char)map.length;
 	}
 	
-	public Volume getVolume() {
-		return mVolume;
-	}
-	
-	public ChannelMap getChannelMap() {
+	public int[] getChannelMap() {
 		return mChannelMap;
 	}
-	
-	public boolean isMuted() {
-		return mMuted;
+	public int getNumChannels() {
+		return mChannelMap.length;
 	}
 	
-	public void update(StreamNode n) {
-		super.update(n);
-		
-		mMuted = n.mMuted;
-		
-		mVolume = n.mVolume;
-		mChannelMap = n.mChannelMap;
+	public String getChannelNameByIndex(int index) {
+		return getChannelName(mChannelMap[index]);
 	}
-	
-	public abstract int getSourceIndex();
-	
-	public abstract Stream getNewStream(String name);
-	public abstract void connectRecordStream(Stream stream);
-	
-	public abstract void setMute(boolean mute, SuccessCallback c);
-	public abstract void setVolume(Volume volume, SuccessCallback c);
+	public String getChannelName(int mapping) {
+		String name = MAP_NAMES.get(Integer.valueOf(mapping));
+		if (name == null) {
+			name = JNIPositionPrettyPrintString(mapping);
+			MAP_NAMES.put(Integer.valueOf(mapping), name);
+		}
+		
+		return name;
+	}
+	private static native String JNIPositionPrettyPrintString(int mapping);
 }

@@ -36,6 +36,7 @@
 extern JavaVM *g_vm;
 
 extern jclass jcls_volume;
+extern jclass jcls_channel_map;
 
 inline void set_field_string(JNIEnv *jenv,
 		jobject jobj, jclass cls,
@@ -115,6 +116,33 @@ inline void set_field_volume(JNIEnv *jenv,
 	(*jenv)->SetObjectField(jenv, jobj, fid, data);
 }
 
+inline void set_field_channel_map(JNIEnv *jenv,
+		jobject jobj, jclass cls,
+		const char *fname, pa_channel_map* cm) {
+	jfieldID fid = (*jenv)->GetFieldID(jenv, cls, fname,
+			"Lcom/harrcharr/pulse/ChannelMap;");
+	if (fid == NULL) {
+		LOGE("Unable to find field %s", fname);
+		return; // Field not found
+	}
+
+	jintArray map;
+	map = (*jenv)->NewIntArray(jenv, cm->channels);
+	if (map == NULL) {
+		return; /* oom */
+	}
+	(*jenv)->SetIntArrayRegion(
+			jenv, map, 0, cm->channels, cm->map);
+
+	jobject data;
+	jmethodID init = (*jenv)->GetMethodID(jenv, jcls_channel_map,
+			"<init>", "([I)V");
+	data = (*jenv)->NewObject(jenv, jcls_channel_map,
+			init, map);
+
+	(*jenv)->SetObjectField(jenv, jobj, fid, data);
+}
+
 //void set_field_proplist(JNIEnv *jenv,
 //		jobject jobj, jclass cls,
 //		char *fname, pa_proplist* p) {
@@ -142,6 +170,7 @@ Java_com_harrcharr_pulse_SinkInfo_JNIPopulateStruct(
 	set_field_int(jenv, jobj, cls, "mMonitorSourceIndex", i->monitor_source);
 
 	set_field_volume(jenv, jobj, cls, "mVolume", &(i->volume));
+	set_field_channel_map(jenv, jobj, cls, "mChannelMap", &(i->channel_map));
 
 	set_field_boolean(jenv, jobj, cls, "mMuted", i->mute);
 }
@@ -158,6 +187,7 @@ Java_com_harrcharr_pulse_SourceInfo_JNIPopulateStruct(
 	set_field_int(jenv, jobj, cls, "mIndex", i->index);
 
 	set_field_volume(jenv, jobj, cls, "mVolume", &(i->volume));
+	set_field_channel_map(jenv, jobj, cls, "mChannelMap", &(i->channel_map));
 
 	set_field_boolean(jenv, jobj, cls, "mMuted", i->mute);
 }
@@ -176,6 +206,7 @@ Java_com_harrcharr_pulse_SinkInput_JNIPopulateStruct(
 	set_field_int(jenv, jobj, cls, "mOwnerStreamIndex", i->sink);
 
 	set_field_volume(jenv, jobj, cls, "mVolume", &(i->volume));
+	set_field_channel_map(jenv, jobj, cls, "mChannelMap", &(i->channel_map));
 
 	set_field_boolean(jenv, jobj, cls, "mMuted", i->mute);
 	set_field_boolean(jenv, jobj, cls, "mCorked", i->corked);
@@ -204,6 +235,7 @@ Java_com_harrcharr_pulse_SourceOutput_JNIPopulateStruct(
 	set_field_int(jenv, jobj, cls, "mOwnerStreamIndex", i->source);
 
 	set_field_volume(jenv, jobj, cls, "mVolume", &(i->volume));
+	set_field_channel_map(jenv, jobj, cls, "mChannelMap", &(i->channel_map));
 
 	set_field_boolean(jenv, jobj, cls, "mMuted", i->mute);
 	set_field_boolean(jenv, jobj, cls, "mCorked", i->corked);
@@ -239,6 +271,17 @@ Java_com_harrcharr_pulse_PulseNode_getProps(
 
 //	LOGD(pa_proplist_gets(p, key));
 	return key;
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_harrcharr_pulse_ChannelMap_JNIPositionPrettyPrintString(
+		JNIEnv *jenv, jclass jcls, jint mapping) {
+	jstring jstr = (*jenv)->NewStringUTF(jenv,
+			pa_channel_position_to_pretty_string(mapping));
+	if (jstr == NULL) {
+		return; // OOM
+	}
+	return jstr;
 }
 
 JNIEXPORT jlong JNICALL

@@ -8,3 +8,4 @@ public abstract class SourceInfoCallback extends InfoCallback<SourceInfo> {
 
 	public abstract void run(final SourceInfo node);
 }
+ 

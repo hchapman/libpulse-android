@@ -21,6 +21,7 @@ public class Stream extends JNIObject {
 		connectRecord(""+idx);
 	}
 	public native void connectRecord(String dev);
+	public native void disconnect();
 	
 	public static interface ReadCallback {
 		public void run(double vol);

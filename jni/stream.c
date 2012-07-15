@@ -160,6 +160,19 @@ Java_com_harrcharr_pulse_Stream_connectRecord(
 }
 
 JNIEXPORT void JNICALL
+Java_com_harrcharr_pulse_Stream_disconnect(
+		JNIEnv *jenv, jobject jstream) {
+	pa_stream *stream = get_stream_ptr(jenv, jstream);
+
+	if (pa_stream_disconnect(stream) < 0) {
+		LOGE("Failed to disconnect from stream");
+		// Throw an exception to java
+	}
+
+	pa_stream_unref(stream);
+}
+
+JNIEXPORT void JNICALL
 Java_com_harrcharr_pulse_Stream_setReadCallback(
 		JNIEnv *jenv, jobject jstream, jobject jcb) {
 	pa_stream *stream = get_stream_ptr(jenv, jstream);
