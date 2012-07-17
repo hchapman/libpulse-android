@@ -168,6 +168,18 @@ Java_com_harrcharr_pulse_PulseContext_setSinkInputVolume(
 			volumes, success_cb);
 }
 
+JNIEXPORT void JNICALL
+Java_com_harrcharr_pulse_PulseContext_moveSinkInput(
+		JNIEnv *jenv, jobject jcontext,
+		jint idx, jint sink_idx,
+		jobject runnable) {
+	context_synchronized_move_call(
+			jenv, jcontext, runnable,
+			&pa_context_move_sink_input_by_index, (uint32_t)idx,
+			(uint32_t)sink_idx,
+			success_cb);
+}
+
 
 JNIEXPORT void JNICALL
 Java_com_harrcharr_pulse_PulseContext_getSourceInfo(
@@ -248,6 +260,18 @@ Java_com_harrcharr_pulse_PulseContext_setSourceOutputVolume(
 			jenv, jcontext, runnable,
 			&pa_context_set_source_output_volume, (uint32_t)idx,
 			volumes, success_cb);
+}
+
+JNIEXPORT void JNICALL
+Java_com_harrcharr_pulse_PulseContext_moveSourceOutput(
+		JNIEnv *jenv, jobject jcontext,
+		jint idx, jint source_idx,
+		jobject runnable) {
+	context_synchronized_move_call(
+			jenv, jcontext, runnable,
+			&pa_context_move_source_output_by_index, (uint32_t)idx,
+			(uint32_t)source_idx,
+			success_cb);
 }
 
 JNIEXPORT void JNICALL

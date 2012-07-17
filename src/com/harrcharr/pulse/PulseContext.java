@@ -205,6 +205,7 @@ public class PulseContext extends JNIObject {
 	public final native void getSinkInputInfo(int idx, InfoCallback<SinkInput> cb);
 	public final native void getSinkInputInfoList(InfoCallback<SinkInput> cb);
 	public final native void setSinkInputMute(int idx, boolean mute, SuccessCallback cb);
+	public final native void moveSinkInput(int idx, int sink_idx, SuccessCallback cb);
 	private synchronized final native void setSinkInputVolume(int idx, int[] volumes, SuccessCallback cb);
 	
 	// Source
@@ -217,6 +218,7 @@ public class PulseContext extends JNIObject {
 	public final native void getSourceOutputInfo(int idx, InfoCallback<SourceOutput> cb);
 	public final native void getSourceOutputInfoList(InfoCallback<SourceOutput> cb);
 	public final native void setSourceOutputMute(int idx, boolean mute, SuccessCallback cb);
+	public final native void moveSourceOutput(int idx, int source_idx, SuccessCallback cb);
 	private synchronized final native void setSourceOutputVolume(int idx, int[] volumes, SuccessCallback cb);
 	
 	// Client

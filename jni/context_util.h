@@ -54,6 +54,8 @@ typedef pa_operation *(*pa_context_set_mute_t)(
 		pa_context *c, uint32_t idx, int mute, void (*cb), void *userdata);
 typedef pa_operation *(*pa_context_set_volume_t)(
 		pa_context *c, uint32_t idx, pa_cvolume *vol, void (*cb), void *userdata);
+typedef pa_operation *(*pa_context_move_t)(
+		pa_context *c, uint32_t idx, uint32_t owner_idx, void (*cb), void *userdata);
 
 void context_synchronized_info_call(
 		JNIEnv *jenv, jobject jcontext, jobject jcb,
@@ -71,6 +73,10 @@ void context_synchronized_mute_call(
 void context_synchronized_volume_call(
 		JNIEnv *jenv, jobject jcontext, jobject jcb,
 		pa_context_set_volume_t set_volume, uint32_t idx, jintArray volumes,
+		void (*cb));
+void context_synchronized_move_call(
+		JNIEnv *jenv, jobject jcontext, jobject jcb,
+		pa_context_move_t move_node, uint32_t idx, uint32_t owner_idx,
 		void (*cb));
 
 jni_pa_cb_info_t *new_cbinfo(JNIEnv *jenv, jobject jcontext, jobject jcb,

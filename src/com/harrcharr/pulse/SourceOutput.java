@@ -23,6 +23,10 @@ public class SourceOutput extends OwnedStreamNode {
 	public void connectRecordStream(Stream s) {
 		
 	}
+	
+	protected void moveNodeByIndex(int index, SuccessCallback cb) {
+		mPulse.moveSourceOutput(mIndex, index, cb);
+	}
 
 	private final native void JNIPopulateStruct(long pSinkInputInfo);
 }

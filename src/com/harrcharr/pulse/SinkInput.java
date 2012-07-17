@@ -20,5 +20,9 @@ public class SinkInput extends OwnedStreamNode {
 		super.update(n);
 	}
 
+	protected void moveNodeByIndex(int index, SuccessCallback cb) {
+		mPulse.moveSinkInput(mIndex, index, cb);
+	}
+
 	private final native void JNIPopulateStruct(long pSinkInputInfo);
 }

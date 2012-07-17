@@ -20,7 +20,7 @@ public class SourceInfo extends OwnerStreamNode {
 	}
 	
 	public int getSourceIndex() {
-		return 0;
+		return mIndex;
 	}
 	
 	private final native void JNIPopulateStruct(long pSinkInfo);

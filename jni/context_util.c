@@ -243,6 +243,30 @@ void context_synchronized_volume_call(
 	pa_threaded_mainloop_unlock(m);
 }
 
+void context_synchronized_move_call(
+		JNIEnv *jenv, jobject jcontext, jobject jcb,
+		pa_context_move_t move_node, uint32_t idx,
+		uint32_t owner_idx, void (*cb)) {
+	LOGD("NATIVE: sync_mute_call - start");
+	pa_context *c = get_context_ptr(jenv, jcontext);
+	assert(c);
+	pa_threaded_mainloop *m = get_mainloop_ptr(jenv, jcontext);
+	assert(m);
+
+	pa_threaded_mainloop_lock(m);
+
+	pa_operation *o;
+	LOGD("NATIVE: sync_move_call - pointers ready");
+
+	jni_pa_cb_info_t *cbinfo = new_cbinfo(jenv, jcontext, jcb, m, NULL);
+
+	o = move_node(c, idx, owner_idx, cb, cbinfo);
+	assert(o);
+
+	pa_operation_unref(o);
+	pa_threaded_mainloop_unlock(m);
+}
+
 /*
  * Get a new global reference, saving knowledge of it in the context (for freeing)
  *
@@ -485,7 +509,7 @@ void success_cb(pa_context* c, int success, void *userdata) {
     assert(m);
 
 	if ((cls = (*env)->GetObjectClass(env, cbdata->cb_runnable))) {
-		if ((mid = (*env)->GetMethodID(env, cls, "run", "()V"))) {
+		if ((mid = (*env)->GetMethodID(env, cls, "run", "(I)V"))) {
 			// Run the actual Java callback method
 			(*env)->CallVoidMethod(env, cbdata->cb_runnable, mid);
 		}

@@ -32,7 +32,7 @@ public abstract class OwnedStreamNode extends StreamNode {
 	protected boolean mHasVolume;
 	protected boolean mVolumeWritable;
 	
-	protected StreamNode mOwner;
+	protected OwnerStreamNode mOwner;
 	
 	// More optional parameters
 	protected String mAppName;
@@ -75,10 +75,17 @@ public abstract class OwnedStreamNode extends StreamNode {
 		stream.connectRecord(getSourceIndex());
 	}
 	
-	public void setOwner(StreamNode n) {
+	public void setOwner(OwnerStreamNode n) {
 		// Change to OwnerStreamNode when implemented
 		mOwner = n;
 	}
+	
+	public void moveNode(OwnerStreamNode n, SuccessCallback cb) {
+		moveNodeByIndex(mOwner.getIndex(), cb);
+		mOwner = n;
+	}
+	
+	protected abstract void moveNodeByIndex(int index, SuccessCallback cb);
 	
 	public StreamNode getOwner() {
 		return mOwner;
