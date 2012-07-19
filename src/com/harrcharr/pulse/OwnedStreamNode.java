@@ -81,8 +81,8 @@ public abstract class OwnedStreamNode extends StreamNode {
 	}
 	
 	public void moveNode(OwnerStreamNode n, SuccessCallback cb) {
-		moveNodeByIndex(mOwner.getIndex(), cb);
 		mOwner = n;
+		moveNodeByIndex(mOwner.getIndex(), cb);
 	}
 	
 	protected abstract void moveNodeByIndex(int index, SuccessCallback cb);
