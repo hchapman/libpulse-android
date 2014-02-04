@@ -5,11 +5,11 @@
  *      Author: harrcharr
  */
 
-#import <jni.h>
-#import <pulse/pulseaudio.h>
+#include <jni.h>
+#include <pulse/pulseaudio.h>
 
-#import "logging.h"
-#import "jni_core.h"
+#include "logging.h"
+#include "jni_core.h"
 
 extern jclass jcls_stream;
 
