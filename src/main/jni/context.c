@@ -29,9 +29,12 @@
 
 #include "context_util.h"
 
+int created_num = 0;
+
 JNIEXPORT jlong JNICALL
 Java_com_harrcharr_pulse_PulseContext_JNICreate(
 		JNIEnv *jenv, jclass jcls, pa_threaded_mainloop *m) {
+	dlog(0, "creating pulse context for the %d th time", created_num++);
 	dlog(0, "%d", m);
 	pa_mainloop_api *api = pa_threaded_mainloop_get_api(m);
 	pa_context *c = pa_context_new(api, "primary");
