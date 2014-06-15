@@ -46,13 +46,11 @@ JNIEXPORT jint JNICALL
 Java_com_harrcharr_pulse_PulseContext_connect(
 		JNIEnv *jenv, jobject jobj, jstring server) {
 	pa_context *c = (pa_context *)get_obj_ptr(jenv, jobj);
-
     const jbyte *srv;
     srv = (*jenv)->GetStringUTFChars(jenv, server, NULL);
     if (srv == NULL) {
         return NULL; /* OutOfMemoryError already thrown */
     }
-
 	int result = pa_context_connect(c, srv, PA_CONTEXT_NOFAIL, NULL);
     (*jenv)->ReleaseStringUTFChars(jenv, server, srv);
 
